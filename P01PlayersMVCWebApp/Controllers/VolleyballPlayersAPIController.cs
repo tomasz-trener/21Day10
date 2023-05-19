@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using P01PlayersMVCWebApp.Models;
 
 namespace P01PlayersMVCWebApp.Controllers
@@ -12,18 +13,30 @@ namespace P01PlayersMVCWebApp.Controllers
     public class VolleyballPlayersAPIController : Controller
     {
         private readonly VolleyballWebContext _context;
-
-        public VolleyballPlayersAPIController(VolleyballWebContext context)
+        private readonly HttpClient _client;
+        public VolleyballPlayersAPIController(IHttpClientFactory clientFactory, VolleyballWebContext context)
         {
+            _client = clientFactory.CreateClient();
             _context = context;
         }
 
         // GET: VolleyballPlayersAPI
         public async Task<IActionResult> Index()
         {
-              return _context.VolleyballPlayers != null ? 
-                          View(await _context.VolleyballPlayers.ToListAsync()) :
-                          Problem("Entity set 'VolleyballWebContext.VolleyballPlayers'  is null.");
+            var response = await _client.GetAsync("http://localhost:5128/api/volleyballplayers");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var volleyballPlayers = JsonConvert.DeserializeObject<IEnumerable<VolleyballPlayer>>(content);
+                return View(volleyballPlayers);
+            }
+            else
+            {
+                return Problem("Nie można uzyskać dostępu do API");
+            }
+
+
         }
 
         // GET: VolleyballPlayersAPI/Details/5
