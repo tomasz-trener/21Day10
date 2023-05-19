@@ -27,6 +27,8 @@ namespace P01PlayersMVCWebApp.Controllers
         }
 
         // GET: VolleyballPlayers/Details/5
+
+       // [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.VolleyballPlayers == null)
@@ -118,6 +120,7 @@ namespace P01PlayersMVCWebApp.Controllers
         }
 
         // GET: VolleyballPlayers/Delete/5
+       // [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.VolleyballPlayers == null)
