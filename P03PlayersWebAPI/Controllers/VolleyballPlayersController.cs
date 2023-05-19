@@ -21,6 +21,8 @@ namespace P03PlayersWebAPI.Controllers
         }
 
         // GET: api/VolleyballPlayers
+
+        // http://localhost:000/api/VolleyballPlayers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<VolleyballPlayer>>> GetVolleyballPlayers()
         {
