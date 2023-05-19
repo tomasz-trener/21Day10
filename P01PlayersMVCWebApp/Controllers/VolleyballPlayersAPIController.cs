@@ -18,7 +18,7 @@ namespace P01PlayersMVCWebApp.Controllers
         private readonly HttpClient _client;
         private readonly ApiSettings _apiSettings;
         private readonly string _resourcePath;
-        public NewAPIVolleyballPlayersController(IHttpClientFactory clientFactory, IOptions<ApiSettings> apiSettings)
+        public VolleyballPlayersAPIController(IHttpClientFactory clientFactory, IOptions<ApiSettings> apiSettings)
         {
             _client = clientFactory.CreateClient();
             _apiSettings = apiSettings.Value;
@@ -28,7 +28,7 @@ namespace P01PlayersMVCWebApp.Controllers
         // GET: VolleyballPlayersAPI
         public async Task<IActionResult> Index()
         {
-            var response = await _client.GetAsync("http://localhost:5128/api/volleyballplayers");
+            var response = await _client.GetAsync($"{_apiSettings.BaseUrl}{_resourcePath}");
 
             if (response.IsSuccessStatusCode)
             {
