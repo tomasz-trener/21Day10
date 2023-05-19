@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using P01PlayersMVCWebApp.Configuration;
 using P01PlayersMVCWebApp.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<VolleyballWebContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddHttpClient();
 var app = builder.Build();
 

@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using P01PlayersMVCWebApp.Configuration;
 using P01PlayersMVCWebApp.Models;
 
 namespace P01PlayersMVCWebApp.Controllers
@@ -14,10 +16,13 @@ namespace P01PlayersMVCWebApp.Controllers
     {
         private readonly VolleyballWebContext _context;
         private readonly HttpClient _client;
-        public VolleyballPlayersAPIController(IHttpClientFactory clientFactory, VolleyballWebContext context)
+        private readonly ApiSettings _apiSettings;
+        private readonly string _resourcePath;
+        public NewAPIVolleyballPlayersController(IHttpClientFactory clientFactory, IOptions<ApiSettings> apiSettings)
         {
             _client = clientFactory.CreateClient();
-            _context = context;
+            _apiSettings = apiSettings.Value;
+            _resourcePath = "/volleyballplayers";  // Definiowanie ścieżki zasobu
         }
 
         // GET: VolleyballPlayersAPI
