@@ -1,3 +1,10 @@
+scaffolding database 
+
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef dbcontext scaffold "name=DefaultConnectionString" Microsoft.EntityFrameworkCore.SqlServer -o Models
+
+generating new controler 
 dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet aspnet-codegenerator controller -name VolleyballPlayersController -api -m VolleyballPlayer -dc VolleyballWebContext --relativeFolderPath Controllers 
