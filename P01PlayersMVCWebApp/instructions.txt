@@ -12,3 +12,7 @@ dotnet ef dbcontext scaffold "name=DefaultConnectionString" Microsoft.EntityFram
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 dotnet aspnet-codegenerator controller -name VolleyballPlayersController -m VolleyballPlayer -dc VolleyballWebContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+
+
+
+dotnet aspnet-codegenerator controller -name VolleyballPlayersAPIController -m VolleyballPlayer -dc VolleyballWebContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
