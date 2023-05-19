@@ -38,7 +38,7 @@ namespace P01PlayersMVCWebApp.Controllers
             }
             else
             {
-                return Problem("Nie można uzyskać dostępu do API");
+                return Problem("Cannot acces to API");
             }
 
 
@@ -47,19 +47,23 @@ namespace P01PlayersMVCWebApp.Controllers
         // GET: VolleyballPlayersAPI/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.VolleyballPlayers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var volleyballPlayer = await _context.VolleyballPlayers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (volleyballPlayer == null)
+            var response = await _client.GetAsync($"{_apiSettings.BaseUrl}{_resourcePath}/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var volleyballPlayer = JsonConvert.DeserializeObject<VolleyballPlayer>(content);
+                return View(volleyballPlayer);
+            }
+            else
             {
                 return NotFound();
             }
-
-            return View(volleyballPlayer);
         }
 
         // GET: VolleyballPlayersAPI/Create
@@ -77,9 +81,12 @@ namespace P01PlayersMVCWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(volleyballPlayer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var response = await _client.PostAsJsonAsync($"{_apiSettings.BaseUrl}{_resourcePath}", volleyballPlayer);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(volleyballPlayer);
         }
@@ -87,17 +94,23 @@ namespace P01PlayersMVCWebApp.Controllers
         // GET: VolleyballPlayersAPI/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.VolleyballPlayers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var volleyballPlayer = await _context.VolleyballPlayers.FindAsync(id);
-            if (volleyballPlayer == null)
+            var response = await _client.GetAsync($"{_apiSettings.BaseUrl}{_resourcePath}/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var volleyballPlayer = JsonConvert.DeserializeObject<VolleyballPlayer>(content);
+                return View(volleyballPlayer);
+            }
+            else
             {
                 return NotFound();
             }
-            return View(volleyballPlayer);
         }
 
         // POST: VolleyballPlayersAPI/Edit/5
@@ -114,23 +127,16 @@ namespace P01PlayersMVCWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var response = await _client.PutAsJsonAsync($"{_apiSettings.BaseUrl}{_resourcePath}/{id}", volleyballPlayer);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    _context.Update(volleyballPlayer);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!VolleyballPlayerExists(volleyballPlayer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return View(volleyballPlayer);
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(volleyballPlayer);
         }
@@ -138,19 +144,23 @@ namespace P01PlayersMVCWebApp.Controllers
         // GET: VolleyballPlayersAPI/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.VolleyballPlayers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var volleyballPlayer = await _context.VolleyballPlayers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (volleyballPlayer == null)
+            var response = await _client.GetAsync($"{_apiSettings.BaseUrl}{_resourcePath}/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var volleyballPlayer = JsonConvert.DeserializeObject<VolleyballPlayer>(content);
+                return View(volleyballPlayer);
+            }
+            else
             {
                 return NotFound();
             }
-
-            return View(volleyballPlayer);
         }
 
         // POST: VolleyballPlayersAPI/Delete/5
@@ -158,18 +168,16 @@ namespace P01PlayersMVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.VolleyballPlayers == null)
+            var response = await _client.DeleteAsync($"{_apiSettings.BaseUrl}{_resourcePath}/{id}");
+
+            if (response.IsSuccessStatusCode)
             {
-                return Problem("Entity set 'VolleyballWebContext.VolleyballPlayers'  is null.");
+                return RedirectToAction(nameof(Index));
             }
-            var volleyballPlayer = await _context.VolleyballPlayers.FindAsync(id);
-            if (volleyballPlayer != null)
+            else
             {
-                _context.VolleyballPlayers.Remove(volleyballPlayer);
+                return NotFound();
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool VolleyballPlayerExists(int id)
