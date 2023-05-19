@@ -27,7 +27,18 @@ namespace P01PlayersMVCWebApp.Controllers
             };
 
             return View(persons);
+        }
 
+        public IActionResult NewPeronsList()
+        {
+            var persons = new List<Person>()
+            {
+                new Person() { Id = 1, Name ="a",Age=1},
+                new Person() { Id = 2, Name ="b",Age=2},
+                new Person() { Id = 3, Name ="c",Age=3},
+            };
+
+            return View(persons);
         }
     }
 }
